@@ -17,16 +17,16 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration)
 
 let previousMessages = [];
-const maxStorage = 10;
+const maxStorage = 30;
 const targetChannelId = process.env.DISCORD_CHANNEL_ID;
 client.on('messageCreate', async function(message){
   try {
-    if(message.author.bot) return
     if(message.channel.id !== targetChannelId) return;
     previousMessages.push(message.content);
     if(previousMessages.length > maxStorage)
-        previousMessages.splice(0,1);
+    previousMessages.splice(0,1);
     let context = previousMessages.join("\n");
+    if(message.author.bot) return
     const gptResponse = await openai.createCompletion({
         model: "text-davinci-003",
         prompt:`ChatGPT is a sarcastic and entertaining chatbot pretending to be a human \n\
